@@ -1,31 +1,62 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
-import { topics } from '../data/topics';
+import { ChevronRight, ChevronLeft, Globe } from 'lucide-react';
+import { topicsEn, topicsAr } from '../data/topics';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Home() {
+  const { language, toggleLanguage, toArabicNumerals } = useLanguage();
+  const topics = language === 'ar' ? topicsAr : topicsEn;
+
+  const t = {
+    title: language === 'ar' ? 'سلسلة توريد طاقة الرياح البحرية العالمية' : 'Global Offshore Wind Supply Chain',
+    subtitle: language === 'ar' ? 'تقرير ٢٠٢٥ الشامل ولوحة القيادة التفاعلية' : 'Comprehensive 2025 Report & Interactive Dashboard',
+    metrics: {
+      maxCap: language === 'ar' ? 'أقصى قدرة للتوربينات' : 'Max Turbine Capacity',
+      worldRecord: language === 'ar' ? 'نماذج قياسية عالمية' : 'World-Record Prototypes',
+      floating: language === 'ar' ? 'الرياح العائمة' : 'Floating Wind',
+      globalTarget: language === 'ar' ? 'الهدف العالمي بحلول ' + toArabicNumerals('2034') : 'Global Target by 2034',
+      chinaNearshore: language === 'ar' ? 'الصين (قرب الشاطئ)' : 'China Nearshore',
+      lcoe: language === 'ar' ? 'التكلفة المستوية المتوقعة ' + toArabicNumerals('2030') + ' / كيلوواط ساعة' : 'Projected 2030 LCOE / kWh'
+    },
+    subtopics: language === 'ar' ? 'مواضيع فرعية' : 'Sub-topics'
+  };
+
   return (
     <div className="home-dashboard animate-fade-in-up">
+      <div className="language-toggle-container">
+        <button onClick={toggleLanguage} className="language-toggle glass-panel">
+          <Globe size={18} />
+          {language === 'ar' ? 'English' : 'العربية'}
+        </button>
+      </div>
+
       <header className="dashboard-header">
-        <h1 className="text-gradient">Global Offshore Wind Supply Chain</h1>
-        <p className="subtitle">Comprehensive 2025 Report & Interactive Dashboard</p>
+        <h1 className="text-gradient">{t.title}</h1>
+        <p className="subtitle">{t.subtitle}</p>
       </header>
 
       <div className="metrics-grid">
         <div className="glass-panel metric-card animate-float" style={{ animationDelay: '0s' }}>
-          <h3>Max Turbine Capacity</h3>
-          <p className="metric-value text-gradient-teal">26 MW</p>
-          <p className="metric-label">World-Record Prototypes</p>
+          <h3>{t.metrics.maxCap}</h3>
+          <p className="metric-value text-gradient-teal">
+            {toArabicNumerals('26')} {language === 'ar' ? 'ميجاواط' : 'MW'}
+          </p>
+          <p className="metric-label">{t.metrics.worldRecord}</p>
         </div>
         <div className="glass-panel metric-card animate-float" style={{ animationDelay: '1s' }}>
-          <h3>Floating Wind</h3>
-          <p className="metric-value" style={{ color: 'var(--accent-purple)' }}>19 GW</p>
-          <p className="metric-label">Global Target by 2034</p>
+          <h3>{t.metrics.floating}</h3>
+          <p className="metric-value" style={{ color: 'var(--accent-purple)' }}>
+            {toArabicNumerals('19')} {language === 'ar' ? 'جيجاواط' : 'GW'}
+          </p>
+          <p className="metric-label">{t.metrics.globalTarget}</p>
         </div>
         <div className="glass-panel metric-card animate-float" style={{ animationDelay: '2s' }}>
-          <h3>China Nearshore</h3>
-          <p className="metric-value text-gradient">¥0.25</p>
-          <p className="metric-label">Projected 2030 LCOE / kWh</p>
+          <h3>{t.metrics.chinaNearshore}</h3>
+          <p className="metric-value text-gradient">
+            ${toArabicNumerals('0.035')}
+          </p>
+          <p className="metric-label">{t.metrics.lcoe}</p>
         </div>
       </div>
 
@@ -42,12 +73,12 @@ export default function Home() {
                   <div className="topic-icon" style={{ backgroundColor: `${topic.color}20`, color: topic.color }}>
                     <Icon size={28} />
                   </div>
-                  <ChevronRight className="arrow-icon" size={20} />
+                  {language === 'ar' ? <ChevronLeft className="arrow-icon" size={20} /> : <ChevronRight className="arrow-icon" size={20} />}
                 </div>
                 <h2>{topic.title}</h2>
                 <p>{topic.description}</p>
                 <div className="subtopics-badge">
-                  {topic.subtopics.length} Sub-topics
+                  {toArabicNumerals(topic.subtopics.length)} {t.subtopics}
                 </div>
               </div>
             </Link>
@@ -55,10 +86,53 @@ export default function Home() {
         })}
       </div>
 
+      <div className="resources-section glass-panel" style={{ marginTop: '4rem', padding: '2rem', textAlign: 'center' }}>
+        <h2>{language === 'ar' ? 'المصادر المتاحة' : 'Available Resources'}</h2>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap', marginTop: '1.5rem' }}>
+          <a href="/resources/Global_Offshore_Wind_2025 presentation en.pdf" target="_blank" rel="noreferrer" className="glass-card resource-link">Global Presentation (EN)</a>
+          <a href="/resources/Global_Offshore_Wind_2025 presentation ar.pdf" target="_blank" rel="noreferrer" className="glass-card resource-link">العرض التقديمي العالمي (AR)</a>
+          <a href="/resources/Offshore Wind Supply Chain Report - en.pdf" target="_blank" rel="noreferrer" className="glass-card resource-link">Supply Chain Report (EN)</a>
+          <a href="/resources/Offshore Wind Supply Chain Report - cn.pdf" target="_blank" rel="noreferrer" className="glass-card resource-link">Supply Chain Report (CN)</a>
+        </div>
+      </div>
+
+      <footer style={{ marginTop: '3rem', textAlign: 'center', color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '1.1rem' }}>
+        <p>تقديم أستاذ دكتور جلال عثمان و دكتور مهندس حسام زين</p>
+        <p>برعاية الأمانة المصرية لمجلس الطاقة العالمي بوزارة الكهرباء والطاقة المتجددة</p>
+        <p>ومجلس بحوث الكهرباء والطاقة بأكاديمية البحث العلمي</p>
+      </footer>
+
       <style dangerouslySetInnerHTML={{
         __html: `
         .home-dashboard {
           padding-bottom: 2rem;
+          position: relative;
+        }
+        
+        .language-toggle-container {
+          display: flex;
+          justify-content: ${language === 'ar' ? 'flex-end' : 'flex-end'};
+          margin-bottom: 2rem;
+        }
+        
+        .language-toggle {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          border: none;
+          background: rgba(255, 255, 255, 0.05);
+          color: var(--text-primary);
+          border-radius: 2rem;
+          font-size: 0.875rem;
+          font-weight: 500;
+          cursor: pointer;
+          transition: var(--transition-smooth);
+        }
+        
+        .language-toggle:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-2px);
         }
 
         .dashboard-header {
@@ -99,7 +173,7 @@ export default function Home() {
           font-size: 1rem;
           color: var(--text-secondary);
           margin-bottom: 1rem;
-          text-transform: uppercase;
+          ${language === 'ar' ? '' : 'text-transform: uppercase;'}
           letter-spacing: 0.05em;
         }
 
@@ -108,6 +182,19 @@ export default function Home() {
           font-weight: 700;
           line-height: 1;
           margin-bottom: 0.5rem;
+          direction: ltr; /* Keeps $0.035 readable usually, but toArabic converts digits */
+        }
+        
+        .resource-link {
+          padding: 1rem 1.5rem;
+          text-decoration: none;
+          color: var(--text-primary);
+          transition: var(--transition-smooth);
+        }
+        
+        .resource-link:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-2px);
         }
 
         .metric-label {
@@ -153,12 +240,12 @@ export default function Home() {
 
         .topic-card:hover .arrow-icon {
           opacity: 1;
-          transform: translateX(5px);
+          ${language === 'ar' ? 'transform: translateX(-5px);' : 'transform: translateX(5px);'}
           color: var(--accent-blue);
         }
 
         .topic-card:hover .topic-icon {
-          transform: scale(1.1) rotate(5deg);
+          transform: scale(1.1) ${language === 'ar' ? 'rotate(-5deg)' : 'rotate(5deg)'};
         }
 
         .topic-card h2 {

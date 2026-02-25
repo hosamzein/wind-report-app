@@ -1,20 +1,30 @@
 import React, { useState } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { Menu, X, Home, Wind } from 'lucide-react';
-import { topics } from '../data/topics';
+import { topicsEn, topicsAr } from '../data/topics';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { language } = useLanguage();
 
+  const topics = language === 'ar' ? topicsAr : topicsEn;
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+
+  const t = {
+    mobileHeader: language === 'ar' ? "تقرير الرياح '٢٥" : "Wind Report '25",
+    logoTitle: language === 'ar' ? 'الرياح البحرية' : 'Offshore Wind',
+    logoSubtitle: language === 'ar' ? 'تقرير سلسلة التوريد ٢٠٢٥' : 'Supply Chain Report 2025',
+    homeTitle: language === 'ar' ? 'لوحة القيادة الرئيسية' : 'Home Dashboard'
+  };
 
   return (
     <div className="layout-container">
       {/* Mobile Header */}
       <header className="mobile-header glass-panel">
         <div className="logo">
-          <Wind className="logo-icon" />
-          <span>Wind Report '25</span>
+          <Wind className="logo-icon" style={{ [language === 'ar' ? 'marginLeft' : 'marginRight']: '10px' }} />
+          <span>{t.mobileHeader}</span>
         </div>
         <button onClick={toggleSidebar} className="menu-toggle">
           {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
@@ -25,10 +35,10 @@ export default function Layout() {
       <aside className={`sidebar glass-panel ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <div className="logo text-gradient">
-            <Wind size={28} style={{ marginRight: '10px' }} />
-            <h2>Offshore Wind</h2>
+            <Wind size={28} style={{ [language === 'ar' ? 'marginLeft' : 'marginRight']: '10px' }} />
+            <h2>{t.logoTitle}</h2>
           </div>
-          <p className="subtitle">Supply Chain Report 2025</p>
+          <p className="subtitle">{t.logoSubtitle}</p>
         </div>
 
         <nav className="nav-menu">
@@ -41,7 +51,7 @@ export default function Layout() {
             <div className="nav-icon-wrapper" style={{ color: 'var(--accent-blue)' }}>
               <Home size={20} />
             </div>
-            <span>Home Dashboard</span>
+            <span>{t.homeTitle}</span>
           </NavLink>
 
           <div className="nav-divider"></div>
@@ -129,7 +139,7 @@ export default function Layout() {
         .sidebar {
           width: 320px;
           position: fixed;
-          left: 0;
+          ${language === 'ar' ? 'right: 0;' : 'left: 0;'}
           top: 0;
           bottom: 0;
           z-index: 40;
@@ -156,7 +166,7 @@ export default function Layout() {
           font-size: 0.875rem;
           color: var(--text-secondary);
           margin-top: 0.5rem;
-          padding-left: 2.5rem;
+          ${language === 'ar' ? 'padding-right: 2.5rem;' : 'padding-left: 2.5rem;'}
         }
 
         .nav-menu {
@@ -179,14 +189,14 @@ export default function Layout() {
         .nav-link::before {
           content: '';
           position: absolute;
-          left: 0;
+          ${language === 'ar' ? 'right: 0;' : 'left: 0;'}
           top: 0;
           bottom: 0;
           width: 3px;
           background: var(--accent-blue);
           transform: scaleY(0);
           transition: var(--transition-smooth);
-          border-radius: 0 4px 4px 0;
+          border-radius: ${language === 'ar' ? '4px 0 0 4px;' : '0 4px 4px 0;'}
         }
 
         .nav-icon-wrapper {
@@ -197,7 +207,7 @@ export default function Layout() {
           height: 32px;
           border-radius: 0.5rem;
           background: rgba(255, 255, 255, 0.05);
-          margin-right: 1rem;
+          ${language === 'ar' ? 'margin-left: 1rem;' : 'margin-right: 1rem;'}
           transition: var(--transition-smooth);
         }
 
@@ -232,7 +242,7 @@ export default function Layout() {
 
         .main-content {
           flex: 1;
-          margin-left: 320px;
+          ${language === 'ar' ? 'margin-right: 320px;' : 'margin-left: 320px;'}
           transition: var(--transition-smooth);
         }
 
@@ -256,7 +266,7 @@ export default function Layout() {
         @media (max-width: 1024px) {
           .sidebar {
             width: 280px;
-            transform: translateX(-100%);
+            transform: ${language === 'ar' ? 'translateX(100%)' : 'translateX(-100%)'};
           }
           
           .sidebar.open {
@@ -264,7 +274,7 @@ export default function Layout() {
           }
           
           .main-content {
-            margin-left: 0;
+            ${language === 'ar' ? 'margin-right: 0;' : 'margin-left: 0;'}
           }
           
           .mobile-header {

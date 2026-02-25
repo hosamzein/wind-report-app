@@ -1,64 +1,70 @@
 import React, { useEffect } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
-import { topics } from '../data/topics';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { topicsEn, topicsAr } from '../data/topics';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Topic() {
-    const { id } = useParams();
-    const topic = topics.find(t => t.id === id);
+  const { id } = useParams();
+  const { language, toArabicNumerals } = useLanguage();
 
-    // Scroll to top on route change
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [id]);
+  const topics = language === 'ar' ? topicsAr : topicsEn;
+  const topic = topics.find(t => t.id === id);
 
-    if (!topic) {
-        return <Navigate to="/" replace />;
-    }
+  // translations
+  const backText = language === 'ar' ? 'العودة إلى لوحة القيادة' : 'Back to Dashboard';
 
-    const Icon = topic.icon;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
-    return (
-        <div className="topic-page animate-fade-in-up">
-            <Link to="/" className="back-link">
-                <ArrowLeft size={16} />
-                <span>Back to Dashboard</span>
-            </Link>
+  if (!topic) {
+    return <Navigate to="/" replace />;
+  }
 
-            <header className="topic-header glass-panel">
-                <div className="topic-header-content">
-                    <div className="topic-icon-large" style={{ backgroundColor: `${topic.color}20`, color: topic.color }}>
-                        <Icon size={48} />
-                    </div>
-                    <div className="topic-header-text">
-                        <h1 className="text-gradient" style={{ backgroundImage: `linear-gradient(135deg, ${topic.color}, var(--accent-blue))` }}>
-                            {topic.title}
-                        </h1>
-                        <p className="topic-description">{topic.description}</p>
-                    </div>
-                </div>
-            </header>
+  const Icon = topic.icon;
 
-            <div className="subtopics-list">
-                {topic.subtopics.map((subtopic, index) => (
-                    <div
-                        key={index}
-                        className="subtopic-card glass-panel animate-fade-in-up"
-                        style={{ animationDelay: `${0.1 + (index * 0.1)}s` }}
-                    >
-                        <div className="subtopic-number" style={{ color: topic.color }}>
-                            {(index + 1).toString().padStart(2, '0')}
-                        </div>
-                        <div className="subtopic-content">
-                            <h3>{subtopic.title}</h3>
-                            <p>{subtopic.content}</p>
-                        </div>
-                    </div>
-                ))}
+  return (
+    <div className="topic-page animate-fade-in-up">
+      <Link to="/" className="back-link">
+        {language === 'ar' ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
+        <span>{backText}</span>
+      </Link>
+
+      <header className="topic-header glass-panel">
+        <div className="topic-header-content">
+          <div className="topic-icon-large" style={{ backgroundColor: `${topic.color}20`, color: topic.color }}>
+            <Icon size={48} />
+          </div>
+          <div className="topic-header-text">
+            <h1 className="text-gradient" style={{ backgroundImage: `linear-gradient(135deg, ${topic.color}, var(--accent-blue))` }}>
+              {topic.title}
+            </h1>
+            <p className="topic-description">{topic.description}</p>
+          </div>
+        </div>
+      </header>
+
+      <div className="subtopics-list">
+        {topic.subtopics.map((subtopic, index) => (
+          <div
+            key={index}
+            className="subtopic-card glass-panel animate-fade-in-up"
+            style={{ animationDelay: `${0.1 + (index * 0.1)}s` }}
+          >
+            <div className="subtopic-number" style={{ color: topic.color }}>
+              {toArabicNumerals((index + 1).toString().padStart(2, '0'))}
             </div>
+            <div className="subtopic-content">
+              <h3>{subtopic.title}</h3>
+              <p>{subtopic.content}</p>
+            </div>
+          </div>
+        ))}
+      </div>
 
-            <style dangerouslySetInnerHTML={{
-                __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .topic-page {
           padding-bottom: 4rem;
         }
@@ -75,7 +81,7 @@ export default function Topic() {
 
         .back-link:hover {
           color: var(--text-primary);
-          transform: translateX(-5px);
+          ${language === 'ar' ? 'transform: translateX(5px);' : 'transform: translateX(-5px);'}
         }
 
         .topic-header {
@@ -89,14 +95,14 @@ export default function Topic() {
           content: '';
           position: absolute;
           top: 0;
-          right: 0;
+          ${language === 'ar' ? 'left: 0;' : 'right: 0;'}
           width: 300px;
           height: 300px;
           background: ${topic.color};
           filter: blur(100px);
           opacity: 0.15;
           border-radius: 50%;
-          transform: translate(50%, -50%);
+          transform: translate(${language === 'ar' ? '-50%' : '50%'}, -50%);
         }
 
         .topic-header-content {
@@ -143,7 +149,7 @@ export default function Topic() {
         }
 
         .subtopic-card:hover {
-          transform: translateX(10px);
+          ${language === 'ar' ? 'transform: translateX(-10px);' : 'transform: translateX(10px);'}
           background: rgba(30, 41, 59, 0.6);
         }
 
@@ -187,6 +193,6 @@ export default function Topic() {
           }
         }
       `}} />
-        </div>
-    );
+    </div>
+  );
 }
