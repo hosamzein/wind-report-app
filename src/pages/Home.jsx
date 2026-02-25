@@ -97,9 +97,15 @@ export default function Home() {
       </div>
 
       <footer style={{ marginTop: '3rem', textAlign: 'center', color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '1.1rem' }}>
-        <p>تقديم أستاذ دكتور جلال عثمان و دكتور مهندس حسام زين</p>
-        <p>برعاية الأمانة المصرية لمجلس الطاقة العالمي بوزارة الكهرباء والطاقة المتجددة</p>
-        <p>ومجلس بحوث الكهرباء والطاقة بأكاديمية البحث العلمي</p>
+        <p style={{ marginBottom: '1rem' }}>
+          <strong>{language === 'ar' ? 'تقديم' : 'Presented by'}</strong><br />
+          {language === 'ar' ? 'أستاذ دكتور: جلال عثمان' : 'Prof. Dr. Galal Osman'}<br />
+          {language === 'ar' ? 'دكتور مهندس: حسام زين' : 'Dr. Eng. Hossam Zein'}
+        </p>
+        <p>
+          {language === 'ar' ? 'برعاية الأمانة المصرية لمجلس الطاقة العالمي بوزارة الكهرباء والطاقة المتجددة' : 'Sponsored by the Egyptian National Committee of the World Energy Council at the Ministry of Electricity and Renewable Energy'}<br />
+          {language === 'ar' ? 'ومجلس بحوث الكهرباء والطاقة بأكاديمية البحث العلمي' : 'and the Electrical and Energy Research Council at the Academy of Scientific Research'}
+        </p>
       </footer>
 
       <style dangerouslySetInnerHTML={{
