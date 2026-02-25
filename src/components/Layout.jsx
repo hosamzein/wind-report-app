@@ -13,8 +13,8 @@ export default function Layout() {
 
   const t = {
     mobileHeader: language === 'ar' ? "تقرير الرياح '٢٥" : "Wind Report '25",
-    logoTitle: language === 'ar' ? 'الرياح البحرية' : 'Offshore Wind',
-    logoSubtitle: language === 'ar' ? 'تقرير سلسلة التوريد ٢٠٢٥' : 'Supply Chain Report 2025',
+    logoTitle: language === 'ar' ? 'سلسلة توريد طاقة الرياح البحرية العالمية' : 'Global Offshore Wind Energy Supply Chain',
+    logoSubtitle: language === 'ar' ? 'تقرير ٢٠٢٥' : 'Report 2025',
     homeTitle: language === 'ar' ? 'لوحة القيادة الرئيسية' : 'Home Dashboard'
   };
 
